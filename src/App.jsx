@@ -2,8 +2,9 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import NavBar from './navbar/navbar';
-import { SearchBar } from './page/Home';
+import { Home } from './page/Home'
 import { All } from './page/All';
+import Login from './component/login/login';
 
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,19 +29,31 @@ function App() {
     locationName: locationName[i]
   }));
 
-  // filter for search
   const filteredCities = cityData.filter(city =>
     city.locationName.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  
+ 
+  const defaultCity = cityData[0]; 
+
   return (
     <Router>
       <NavBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} filteredCities={filteredCities} />
       
         <Routes>
-          <Route path='/' element={<SearchBar/>}/>
-
-          <Route path="/all" element={<All/>}/>
+          
+        <Route path="/"  element={
+          <div className="flex flex-wrap justify-center gap-6 mt-10">
+            {searchQuery === "" ? <Home timeZone={defaultCity.timeZone} locationName={defaultCity.locationName} /> : filteredCities.map((city, i) => 
+            (
+            <Home key={i} timeZone={city.timeZone} locationName={city.locationName} />
+            ))}
+          </div>
+        }
+      />
+        <Route path="/all" element={<All/>}/>
+        <Route index element={<Login/>}/>
+        <Route path="/login" element={<Login />} />
+        <Route path="/home" element={<Home />} />
         </Routes>
 
     </Router>
@@ -48,3 +61,4 @@ function App() {
 }
 
 export default App;
+

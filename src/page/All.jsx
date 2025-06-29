@@ -20,13 +20,14 @@ export function All(){
 
     return(
         <div className='w-full gap-5 flex items-center justify-between flex-wrap p-6'>
-        {timezones.map((city) => (
+        {timezones.map((city, idx) => (
           <TimeZone
             key={city}
             timeZone={city}
-            locationName={city}
+            locationName={locationName[idx]}
             
           />
+          
         ))}
       </div>
     )
