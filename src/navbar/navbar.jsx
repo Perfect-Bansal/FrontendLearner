@@ -19,7 +19,7 @@ export default function NavBar({ searchQuery, setSearchQuery, filteredCities }) 
 
         <ul className="flex gap-10 mr-8">
           <li>
-            <Link  className="hover:bg-gray-500 focus:outline-2 focus:outline-black-500"> Home </Link>
+            <Link to={"/home"} className="hover:bg-gray-500 focus:outline-2 focus:outline-black-500"> Home </Link>
             </li>
           <li>
             <Link to={"/all" }  className="hover:bg-gray-500 focus:outline-2 focus:outline-black-500">All</Link>
