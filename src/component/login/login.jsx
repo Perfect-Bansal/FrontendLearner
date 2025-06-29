@@ -1,59 +1,64 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useForm } from 'react-hook-form';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const handelsubmit = (e) => {
-    e.preventDefault();
-    alert("Logged In");
-    navigate("/home");
+   const onSubmit = async (data) => {
+    try {
+      const res = await fetch(
+        "api/auth/login",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(data)
+        }
+      );
+      const result = await res.json();
+      if(res.ok){
+          navigate("/home");
+      }else{
+          alert(result.message || "Something went wrong");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
-    <div className="bg-gray-200 shadow-md max rounded-2xl w-[400px] p-10 mx-auto mt-20">
-      <div className="justify-center flex text-2xl mb-4">
-        <h1>Login</h1>
-      </div>
+    <div className="bg-gray-200 shadow-2xl w-[400px] rounded-md p-10 mx-auto mt-40 flex gap-4 flex-col">
+      <div> Login </div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input className ="bg-white w-full rounded-lg px-4 py-2 border border-gray-300 focus:outline-none focus:ring focus:ring-blue-500"
+          placeholder="Email"
+          type="email"
+          {...register("email", { required: true })}
+        />
+        {errors.email && (
+          <span className="text-red-500">Email is required!</span>
+        )}
+        <input className="bg-white w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring focus:ring-blue-500 mt-4"
+        placeholder="Password"
+        type="password"
+        {...register("password", {required: true})}
+        />
+        {errors.password && (
+          <span className=" text-red-500" > Password is required </span>
+        )}
 
-      <form onSubmit={handelsubmit}>
-        <div className="flex flex-col gap-2">
-          <div className="mb-6">
-            <label className="block mb-1">Enter your email</label>
-            <input
-              type="email"
-              placeholder="Email"
-              className="bg-white w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
 
-          <div className="mb-6">
-            <label className="block mb-1">Enter your password</label>
-            <input
-              type="password"
-              placeholder="Password"
-              className="bg-white w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
-          >
-            Login
-          </button>
+        <button className="bg-blue-600 w-full py-2 hover:bg-blue-700 mt-6 rounded-lg text-white">
+           Login
+        </button>
+        <div>
+          <h1> Don't have an account?   
+            <Link to ="/signup" className="hover:underline hover:text-blue-900"> SignUp</Link>
+          </h1>
+          
         </div>
       </form>
-
-      {/* Moved this OUTSIDE the form */}
-      <div className="mt-4 text-center">
-        Don't have an account?
-        <Link
-          to="/signup"
-          className="hover:underline hover:text-blue-700 ml-2"
-        >
-          Sign up
-        </Link>
-      </div>
     </div>
-  );
+  ); 
 }

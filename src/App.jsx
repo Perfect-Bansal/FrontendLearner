@@ -9,6 +9,7 @@ import SignUp from './component/signup/signup';
 function AppContent() {
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLogin, setIsLogin] = useState(false)
 
   const timezones = [
     "Asia/Kathmandu",
@@ -37,24 +38,21 @@ function AppContent() {
 
   const defaultCity = cityData[0];
 
-  // Hide navbar on login page
   const hideNavbarPaths = ["/login", "/signup"];
   const shouldHideNavbar = hideNavbarPaths.includes(location.pathname);
 
   return (
     <>
       {!shouldHideNavbar && (
-        <NavBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} filteredCities={filteredCities} />
+        <NavBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} filteredCities={filteredCities} isLogin={isLogin} />
       )}
 
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/all" element={<All />} />
         <Route path="/signup" element={<SignUp/>}/>
-        <Route
-          path="/home"
-          element={
+        <Route path="/home"  element={
             <div className="flex flex-wrap justify-center gap-6 mt-10">
               {searchQuery === "" ? (
                 <Home timeZone={defaultCity.timeZone} locationName={defaultCity.locationName} />
